@@ -10,6 +10,7 @@ ENV JAVA_OPTS="$JAVA_OPTS -Duser.region=NL"
 ENV JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=elearning.cas-online.nl"
 ENV JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyPort=443"
 ENV JAVA_OPTS="$JAVA_OPTS -Dhttp.scheme=https"
+#ENV JAVA_OPTS="$JAVA_OPTS --add-opens java.base/java.nio=ALL-UNNAMED"
 
 ARG release=22.3
 
@@ -23,7 +24,7 @@ RUN mvn clean install -Dmaven.test.skip=true -DskipTests
 
 # Download and install Apache Tomcat.
 RUN mkdir -p /opt/tomcat
-RUN curl "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.76/bin/apache-tomcat-9.0.76.tar.gz" > /opt/tomcat/tomcat.tar.gz
+RUN curl "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.113/bin/apache-tomcat-9.0.113.tar.gz" > /opt/tomcat/tomcat.tar.gz
 RUN tar -C /opt/tomcat -xf /opt/tomcat/tomcat.tar.gz --strip-components 1
 
 # Configure Tomcat.
@@ -34,7 +35,7 @@ COPY context.xml /opt/tomcat/conf/
 # Install web app.
 RUN mvn sakai:deploy -Dmaven.tomcat.home=/opt/tomcat
 
-FROM openjdk:11
+FROM eclipse-temurin:11-jdk
 
 # Copy Sakai configuration.
 COPY sakai.properties /opt/tomcat/sakai/
